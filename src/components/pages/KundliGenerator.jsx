@@ -1427,11 +1427,11 @@ export default function KundliForm() {
                   Coordinates: {Number(formData.latitude).toFixed(5)}, {Number(formData.longitude).toFixed(5)}
                 </p>
               )}
-              {(!formData.latitude || !formData.longitude) && formData.place && (
+              {/* {(!formData.latitude || !formData.longitude) && formData.place && (
                 <p className="text-yellow-700 text-sm mt-2">
                   Coordinates will be automatically determined when you submit the form.
                 </p>
-              )}
+              )} */}
             </div>
 
             {/* Gender Selection */}
