@@ -61,6 +61,58 @@ export default function SignUpPage() {
     setError('');
   };
 
+  // const handleSignUp = async () => {
+  //   const { name, email, password, gender, dateOfBirth, timeOfBirth, currentLocation,
+  //     placeOfBirth, maritalStatus, religion, focusArea, purposeOfVisit } = formData;
+
+  //   if (!name || !email || !password || !gender || !dateOfBirth || !timeOfBirth ||
+  //     !currentLocation || !placeOfBirth || !maritalStatus || !religion ||
+  //     !focusArea || !purposeOfVisit) {
+  //     setError('Please fill all required fields');
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setError('');
+
+  //   try {
+  //     const response = await fetch(`https://astrolozee-backend.vercel.app/api/auth/signup`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       credentials: 'include',
+  //       body: JSON.stringify({
+  //         name,
+  //         email,
+  //         password,
+  //         gender: gender.toLowerCase(),
+  //         dateOfBirth,
+  //         timeOfBirth,
+  //         currentLocation,
+  //         placeOfBirth,
+  //         maritalStatus: maritalStatus.toLowerCase().replace(/\s+/g, ' '),
+  //         religion: religion.toLowerCase(),
+  //         focusArea: [focusArea.toLowerCase()],
+  //         purposeOfVisit: purposeOfVisit.toLowerCase()
+  //       })
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       console.log('Signup successful:', data);
+  //       setUser(data.user);
+  //       window.location.href = '/';
+  //     } else {
+  //       setError(data.message || 'Signup failed');
+  //     }
+  //   } catch (err) {
+  //     setError('Network error. Please try again.');
+  //     console.error('Signup error:', err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSignUp = async () => {
     const { name, email, password, gender, dateOfBirth, timeOfBirth, currentLocation,
       placeOfBirth, maritalStatus, religion, focusArea, purposeOfVisit } = formData;
@@ -76,7 +128,7 @@ export default function SignUpPage() {
     setError('');
 
     try {
-      const response = await fetch(`https://astrolozee-backend.vercel.app/api/auth/signup`, {
+      const response = await fetch(`http://localhost:5000/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

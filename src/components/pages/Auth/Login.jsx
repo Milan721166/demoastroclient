@@ -29,12 +29,40 @@ export default function LoginPage() {
     setError('');
   }, []);
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError('');
+  //   setLoading(true);
+  //   try {
+  //     const response = await fetch(`https://astrolozee-backend.vercel.app/api/auth/login`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       credentials: 'include',
+  //       body: JSON.stringify(formData)
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setUser(data.user);
+  //       window.location.href = '/';
+  //     } else {
+  //       setError(data.message || 'Login failed');
+  //     }
+  //   } catch (err) {
+  //     setError('Network error. Please try again.');
+  //     console.error(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const response = await fetch(`https://astrolozee-backend.vercel.app/api/auth/login`, {
+      const response = await fetch(`http://localhost:5000/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
