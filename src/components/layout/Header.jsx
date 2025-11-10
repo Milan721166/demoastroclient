@@ -26,7 +26,7 @@ export default function Header() {
           /> */}
 
           <img
-            src="./logo.png"
+            src="./logo.svg"
             alt="logo"
             className="w-10 h-10 sm:w-14 sm:h-14"
           />
