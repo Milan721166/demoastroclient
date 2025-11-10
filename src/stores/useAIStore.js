@@ -10,7 +10,7 @@
 //     set({ chatsLoading: true, error: null });
 
 //     try {
-//       const res = await axios.get("http://localhost:5000/api/astro/history", {
+//       const res = await axios.get("https://demoastrobackend.onrender.com/api/astro/history", {
 //         withCredentials: true,
 //       });
 
@@ -39,7 +39,7 @@
 
 //   sendMessage : async(data) => {
 //     try {
-//         const res = await axios.post("http://localhost:5000/api/astro/ask",data,{
+//         const res = await axios.post("https://demoastrobackend.onrender.com/api/astro/ask",data,{
 //             withCredentials:true,
 //         });
 //         if(res.data.success){
@@ -69,7 +69,7 @@
 
 import { create } from 'zustand';
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = 'https://demoastrobackend.onrender.com';
 
 const useAIStore = create((set, get) => ({
   chats: [],
