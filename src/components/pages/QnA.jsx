@@ -861,25 +861,41 @@ const QNA = () => {
           <div className="w-full max-w-3xl">
             <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-4 mb-4 h-[65vh] overflow-y-auto">
               {chats.length > 0 ? (
-                chats.map((chat, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex flex-col space-y-2 mb-4 ${
-                      chat?.question ? "text-right" : "text-left"
-                    }`}
-                  >
-                    {chat?.question && (
-                      <div className="bg-amber-100 text-gray-800 px-4 py-2 rounded-2xl inline-block max-w-[75%] ml-auto shadow-sm">
-                        {chat.question}
-                      </div>
-                    )}
-                    {chat?.answer && (
-                      <div className="bg-amber-500 text-white px-4 py-2 rounded-2xl inline-block max-w-[75%] shadow-sm">
-                        {chat.answer}
-                      </div>
-                    )}
-                  </div>
-                ))
+                chats.map((chat, idx) => {
+                  // If the backend stored the whole user context (User Info: ... User Question: ...)
+                  // extract only the actual user question text to avoid showing personal info in UI.
+                  const isUser = Boolean(chat?.question);
+                  let displayQuestion = "";
+                  if (isUser && typeof chat.question === "string") {
+                    if (chat.question.includes("User Question:")) {
+                      displayQuestion = chat.question.split("User Question:").pop().trim();
+                    } else {
+                      // Fallback: try to remove the 'User Info:' prefix if present
+                      displayQuestion = chat.question.replace(/User Info:\s*.*$/s, "").trim() || chat.question;
+                    }
+                  }
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex flex-col space-y-2 mb-4 ${
+                        isUser ? "text-right" : "text-left"
+                      }`}
+                    >
+                      {isUser && (
+                        <div className="bg-amber-100 text-gray-800 px-4 py-2 rounded-2xl inline-block max-w-[75%] ml-auto shadow-sm">
+                          <div className="text-xs font-semibold text-amber-700 mb-1">You</div>
+                          <div>{displayQuestion}</div>
+                        </div>
+                      )}
+                      {chat?.answer && (
+                        <div className="bg-amber-500 text-white px-4 py-2 rounded-2xl inline-block max-w-[75%] shadow-sm">
+                          {chat.answer}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               ) : (
                 <p className="text-gray-600 text-center mt-24">
                   No chats yet. Ask your first question below 👇

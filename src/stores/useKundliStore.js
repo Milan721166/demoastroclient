@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import axios from "axios";
 
+// Base URL for backend requests. In development we'll prefer a relative path so Vite proxy (vite.config.js)
+// can forward /api requests to the real backend and avoid CORS. For production, set VITE_API_BASE_URL.
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://demoastrobackend.onrender.com"; // example: "https://demoastrobackend.onrender.com"
+
 const useKundliStore = create((set) => ({
   kundli: null,
   loading: false,
@@ -9,9 +13,13 @@ const useKundliStore = create((set) => ({
     set({ loading: true });
 
     try {
-      const res = await axios.post("https://astrolozee-backend.vercel.app/api/kundli/generate",data,
-        { withCredentials: true }
-      );
+      // Log payload for easier debugging
+      console.log("generateKundli - sending payload:", data);
+
+      // Use relative /api path when API_BASE is empty so dev proxy works
+      const url = `${API_BASE}/api/kundli/generate`;
+
+      const res = await axios.post(url, data, { withCredentials: true });
 
       if (res.data.success) {
         set({ kundli: res.data.data, loading: false });
@@ -22,7 +30,13 @@ const useKundliStore = create((set) => ({
       }
     } catch (error) {
       set({ kundli: null, loading: false });
-      console.error("Error generating kundli:", error);
+      // More explicit logging to capture server response body and status
+      console.error("Error generating kundli:", error?.toJSON ? error.toJSON() : error);
+      if (error.response) {
+        console.error("Backend response data:", error.response.data);
+        console.error("Backend status:", error.response.status);
+      }
+
       return {
         success: false,
         message:

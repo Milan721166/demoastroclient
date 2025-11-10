@@ -542,6 +542,34 @@ export default function KundliForm() {
 
   const placeInputRef = useRef(null);
 
+  // Initialize Google Places Autocomplete when API is available
+  const initializeAutocomplete = () => {
+    try {
+      if (!window.google || !window.google.maps || !window.google.maps.places) return;
+      const input = placeInputRef.current;
+      if (!input) return;
+
+      const autocomplete = new window.google.maps.places.Autocomplete(input, {
+        types: ['(cities)'],
+        componentRestrictions: { country: 'in' },
+      });
+
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place || !place.geometry) {
+          console.warn("No details available for selected place");
+          return;
+        }
+        const formattedAddress = place.formatted_address || place.name || input.value;
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        setFormData(prev => ({ ...prev, place: formattedAddress, latitude: lat, longitude: lng }));
+      });
+    } catch (err) {
+      console.error('initializeAutocomplete error', err);
+    }
+  };
+
   // Function to get current location using Google Maps Geocoding API
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -659,11 +687,30 @@ export default function KundliForm() {
       if (!document.getElementById(scriptId)) {
         const script = document.createElement("script");
         script.id = scriptId;
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleKey}&libraries=places`;
+        // Add loading=async query param (recommended by Google) to avoid the "loaded directly without loading=async" warning
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googleKey}&libraries=places&loading=async&v=weekly`;
         script.async = true;
         script.defer = true;
+        // When loaded, initialize autocomplete
+        script.onload = () => {
+          initializeAutocomplete();
+        };
+        script.onerror = () => {
+          console.error("Failed to load Google Maps script");
+        };
         document.head.appendChild(script);
+      } else {
+        // script exists but API might not be ready yet; try to init after short delay
+        const check = setInterval(() => {
+          if (window.google && window.google.maps && window.google.maps.places) {
+            clearInterval(check);
+            initializeAutocomplete();
+          }
+        }, 200);
       }
+    } else {
+      // already present
+      initializeAutocomplete();
     }
   }, []);
 
@@ -673,14 +720,81 @@ export default function KundliForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
 
-    const { name, birth_date, birth_time, place, gender } = formData;
+    const { name, birth_date, birth_time, place, gender, latitude, longitude } = formData;
 
     if (!name || !birth_date || !birth_time || !place || !gender) {
       return alert("Please fill in all fields, including gender.");
     }
 
+    // If we don't have coordinates, ask the user to pick from autocomplete or use location detection.
+    if ((latitude === null || longitude === null) || Number.isNaN(latitude) || Number.isNaN(longitude)) {
+      // allow if place looks like a coordinate string (e.g., 'Lat: 22.1234, Lng: 88.1234' or contains a plus-code)
+      const placeLower = (place || "").toLowerCase();
+      const looksLikeCoords = /lat:\s*-?\d+(\.\d+)?[,\s]+lng:\s*-?\d+(\.\d+)?/.test(placeLower) || /\d+\.\d+[,\s]+-?\d+\.\d+/.test(placeLower) || /\+[0-9A-Z]{4}\+/.test(place);
+
+      if (!looksLikeCoords) {
+        // Try a simple client-side geocode using Nominatim (OpenStreetMap) as a fallback before failing.
+        try {
+          const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(place)}`;
+          const geoResp = await fetch(geoUrl, {
+            headers: {
+              "Accept": "application/json",
+            },
+          });
+
+          if (geoResp.ok) {
+            const geoJson = await geoResp.json();
+            if (Array.isArray(geoJson) && geoJson.length > 0) {
+              const first = geoJson[0];
+              const lat = parseFloat(first.lat);
+              const lon = parseFloat(first.lon);
+              if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+                // update formData with coordinates and continue
+                setFormData(prev => ({ ...prev, latitude: lat, longitude: lon }));
+                // assign to local vars for later
+                // eslint-disable-next-line prefer-destructuring
+                formData.latitude = lat;
+                // eslint-disable-next-line prefer-destructuring
+                formData.longitude = lon;
+              } else {
+                return alert("Could not determine coordinates from the provided place. Please use autocomplete or 'Get Current Location'.");
+              }
+            } else {
+              return alert("No geocoding results found for this place. Please select from suggestions or use 'Get Current Location'.");
+            }
+          } else {
+            // If nominatim fails, inform the user rather than silently failing
+            console.warn("Nominatim geocode failed with status", geoResp.status);
+            return alert("Unable to geocode the place automatically. Please select from suggestions or use 'Get Current Location'.");
+          }
+        } catch (err) {
+          console.error("Client geocode error:", err);
+          return alert("Error trying to geocode place locally. Please select from suggestions or use 'Get Current Location'.");
+        }
+      }
+    }
+
+    // Compose payload including both snake_case and camelCase variants to match possible backend expectations
+    const payload = {
+      name,
+      birth_date,
+      birthDate: birth_date,
+      birth_time,
+      birthTime: birth_time,
+      place,
+      latitude,
+      longitude,
+      gender,
+    };
+
     try {
-      await generateKundli(formData);
+      const result = await generateKundli(payload);
+      if (result && result.success === false) {
+        // show backend message if provided
+        alert(result.message || "Failed to generate kundli. See console for details.");
+        setDisplay(false);
+        return;
+      }
       setDisplay(true);
     } catch (error) {
       console.error("Error generating kundli:", error);
@@ -803,6 +917,17 @@ export default function KundliForm() {
                   Location set: {formData.place}
                 </p>
               )}
+              {formData.latitude && formData.longitude && (
+                <p className="text-gray-700 text-sm mt-1">
+                  Coordinates: {Number(formData.latitude).toFixed(5)}, {Number(formData.longitude).toFixed(5)}
+                </p>
+              )}
+              {/* Warn if coordinates are not set - backend needs lat/lng to compute kundli reliably */}
+              {(!formData.latitude || !formData.longitude) && (
+                <p className="text-yellow-700 text-sm mt-2">
+                  Please select a suggestion from the autocomplete or click "Get Current Location" so latitude & longitude are set. Submitting without coordinates may fail.
+                </p>
+              )}
             </div>
 
             {/* Gender Selection */}
@@ -835,10 +960,11 @@ export default function KundliForm() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !formData.latitude || !formData.longitude}
+                title={(!formData.latitude || !formData.longitude) ? "Set latitude & longitude before submitting" : ""}
                 className={`w-full sm:w-2/3 md:w-1/3 py-3 rounded-xl font-medium text-sm sm:text-base transition
-                  ${loading 
-                    ? "bg-amber-400 cursor-not-allowed text-white" 
+                  ${loading || !formData.latitude || !formData.longitude
+                    ? "bg-amber-400 cursor-not-allowed text-white"
                     : "bg-amber-500 hover:bg-amber-600 text-white"}`}
               >
                 {loading ? "Generating..." : "Generate Your Kundli"}
