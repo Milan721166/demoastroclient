@@ -1540,8 +1540,8 @@ export default function KundliForm() {
 
   // Base URL for your Node.js backend
   const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'https://demoastrobackend.onrender.com/api' 
-    : 'https://demoastrobackend.onrender.com/api';
+    ? 'https://localhost:5000/api' 
+    : 'https://localhost:5000/api';
 
   // Close dropdown when clicking outside
   useEffect(() => {
