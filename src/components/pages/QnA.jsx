@@ -2884,22 +2884,29 @@ const handleQuestionSubmit = async () => {
         
          
 <div className="w-full max-w-auto">
-  <header class="w-full bg-[#FBAB26] px-4 py-3 flex items-center gap-3">
+  <header className="w-full bg-[#FBAB26] px-4 py-3 flex items-center gap-3">
   <img
     src="ailogo.png"
     alt="Profile"
-    class="w-10 h-10 rounded-full object-cover"
+    className="w-10 h-10 rounded-full object-cover"
   />
 
- 
-  <div class="flex flex-col leading-tight">
-    <span class="text-white md:text-lg text-sm font-medium">
+  <div className="flex flex-col leading-tight">
+    <span className="text-white md:text-lg text-sm font-medium">
       Astrologer
     </span>
-    <span class="text-white text-xs font-medium">
+    <span className="text-white text-xs font-medium">
       🟢 online
     </span>
   </div>
+
+  <button
+    onClick={() => (window.location.href = "/")}
+    className="ml-auto p-2 rounded-md cursor-pointer"
+    aria-label="Close"
+  >
+    <p className="text-white font-bold">X</p>
+  </button>
 </header>
 
   <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-4 mb-4 h-[65vh] overflow-y-auto">

@@ -34,7 +34,7 @@ const KundliModal = ({ isOpen = true, onClose = () => {}, data , loading }) => {
       {/* modal */}
       <div className="relative w-[95%] md:w-4/5 lg:w-3/5 max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-white to-amber-50 border border-amber-100">
         {/* header */}
-        <div className="flex items-center justify-between p-4 border-b border-amber-100">
+        <div className="flex items-center justify-between p-4 border-b border-amber-100 bg-[#FBAB26]">
           <div className="flex items-center gap-3">
             <img
               src="/astro-logo.png"
@@ -42,19 +42,17 @@ const KundliModal = ({ isOpen = true, onClose = () => {}, data , loading }) => {
               className="w-12 h-12 rounded-full border border-amber-200 object-cover"
               onError={(e) => (e.target.src = "./ailogo.png")}
             />
+            
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">{kundli.name}</h3>
-              <p className="text-sm text-gray-500">
-                {kundli.birth_date} • {kundli.birth_time} • {kundli.place}
-              </p>
+              <p className="text-white font-bold">Astrologer</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="text-right mr-2">
-              <div className="text-xs text-gray-500">Response</div>
-              <div className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-amber-500" />
+              <div className="text-xs text-white">Response</div>
+              <div className="text-sm font-medium text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-white" />
                 {kundli.responseTime} ms
               </div>
             </div>
