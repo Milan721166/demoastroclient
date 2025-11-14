@@ -2383,31 +2383,31 @@ const QNA = () => {
             setUserInfo(prev => ({
               ...prev,
               currentLocation: address,
-              birthYear: currentYear,
-              birthMonth: currentMonth,
-              birthDay: currentDay,
-              birthTime: currentTime
+              // birthYear: currentYear,
+              // birthMonth: currentMonth,
+              // birthDay: currentDay,
+              // birthTime: currentTime
             }));
           } else {
             setLocationError("Could not retrieve address from coordinates.");
             // Still set the date even if location fails
-            setUserInfo(prev => ({
-              ...prev,
-              birthYear: currentYear,
-              birthMonth: currentMonth,
-              birthDay: currentDay,
-              birthTime: currentTime
-            }));
+            // setUserInfo(prev => ({
+            //   ...prev,
+            //   // birthYear: currentYear,
+            //   // birthMonth: currentMonth,
+            //   // birthDay: currentDay,
+            //   // birthTime: currentTime
+            // }));
           }
         } catch (error) {
           console.error("Error getting location:", error);
           setLocationError("Failed to get location. Please search manually.");
           // Still set the current date even if location fails
-          const now = new Date();
-          const currentYear = now.getFullYear().toString();
-          const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
-          const currentDay = now.getDate().toString().padStart(2, '0');
-          const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
+          // const now = new Date();
+          // const currentYear = now.getFullYear().toString();
+          // const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
+          // const currentDay = now.getDate().toString().padStart(2, '0');
+          // const currentTime = now.toTimeString().split(' ')[0].substring(0, 5);
           
           setUserInfo(prev => ({
             ...prev,
