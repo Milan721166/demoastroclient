@@ -19,7 +19,7 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold text-lg mb-3">Explore</h3>
           <ul className="space-y-2">
-            <li><a href="/services" className="hover:underline">Services</a></li>
+            <li><a href="/service" className="hover:underline">Services</a></li>
             <li><a href="/contact" className="hover:underline">Contact Us</a></li>
             <li><a href="/about_us" className="hover:underline">About Us</a></li>
           </ul>

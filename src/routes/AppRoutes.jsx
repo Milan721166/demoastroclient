@@ -9,7 +9,9 @@ import CompleteProfilePage from "../components/pages/Auth/CompleteProfilePage";
 import ProtectedRoute from "../components/pages/Auth/ProtectedRoute";
 import AuthInitializer from "../components/pages/Auth/AuthInitializer";
 import AboutUs from "../components/pages/Aboutus";
-
+import Services from "../components/pages/services";
+import ContactUs from "../components/pages/Contact_us";
+import PrivacyPolicy from "../components/pages/PrivacyPolicy";
 export default function AppRoutes() {
   return (
     <BrowserRouter>
@@ -20,7 +22,9 @@ export default function AppRoutes() {
         <Route path="/signup" element={<Signup />} />
         <Route >
         <Route path="/about_us" element={<AboutUs/>}/>
-
+        <Route path="/service" element={<Services/>}/>
+        <Route path="/contact" element={<ContactUs/>}/>
+        <Route path="/terms" element={<PrivacyPolicy/>}/>
         </Route>
         <Route path="/" element={
           <ProtectedRoute>
