@@ -2881,8 +2881,27 @@ const handleQuestionSubmit = async () => {
             </form>
           </div>
         ) : (
+        
          
 <div className="w-full max-w-auto">
+  <header class="w-full bg-[#FBAB26] px-4 py-3 flex items-center gap-3">
+  <img
+    src="ailogo.png"
+    alt="Profile"
+    class="w-10 h-10 rounded-full object-cover"
+  />
+
+ 
+  <div class="flex flex-col leading-tight">
+    <span class="text-white md:text-lg text-sm font-medium">
+      Astrologer
+    </span>
+    <span class="text-white text-xs font-medium">
+      🟢 online
+    </span>
+  </div>
+</header>
+
   <div className="bg-white rounded-2xl shadow-lg border border-amber-100 p-4 mb-4 h-[65vh] overflow-y-auto">
     {chats.length > 0 || showUserInfo || introMessage ? (
       <>
