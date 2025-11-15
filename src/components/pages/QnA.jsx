@@ -3734,32 +3734,33 @@ const handleQuestionSubmit = async () => {
           )}
           
           {/* Bot Message - show if there's an answer */}
-          {chat.answer && (
-            <div className="bg-amber-500 text-white px-4 py-2 rounded-2xl inline-block sm:max-w-[70%] max-w-[85%] shadow-sm text-left">
-              <div>{chat.answer} 
-                {chat.remedy && chat.remedy.trim() !== '' &&(
-                  <div ><p>REMEDY: </p>{chat.remedy}</div>
-                )
-              }
-              </div>
-              
-              
-              {/* Display remedy if available */}
-              {/* {chat.remedy && chat.remedy.trim() !== '' && (
-                <div className="mt-3 p-3 bg-amber-600 rounded-lg border-l-4 border-amber-300">
-                  <div className="text-sm font-semibold mb-1">🔮 Remedy / Suggestion:</div>
-                  <div className="text-sm">{chat.remedy}</div>
-                </div>
-              )} */}
-              
-              {/* Display retrieved sources if available */}
-              {chat.retrievedSources && chat.retrievedSources.length > 0 && (
-                <div className="mt-2 text-xs text-amber-200">
-                  <div>Sources: {chat.retrievedSources.length} references</div>
-                </div>
-              )}
-            </div>
-          )}
+         
+{chat.answer && (
+  <div className="flex flex-col space-y-2">
+    
+    {/* Answer Bubble */}
+    <div className="bg-amber-500 text-white px-4 py-2 rounded-2xl inline-block sm:max-w-[70%] max-w-[85%] shadow-sm text-left">
+      <div>{chat.answer}</div>
+
+      {/* Display retrieved sources */}
+      {chat.retrievedSources && chat.retrievedSources.length > 0 && (
+        <div className="mt-2 text-xs text-amber-200">
+          <div>Sources: {chat.retrievedSources.length} references</div>
+        </div>
+      )}
+    </div>
+
+    {/* Remedy as NEW Separate SMS Bubble */}
+    {chat.remedy && chat.remedy.trim() !== "" && (
+      <div className="bg-amber-500 text-white px-4 py-2 rounded-2xl inline-block sm:max-w-[70%] max-w-[85%] shadow-sm text-left">
+        <div className="text-sm font-semibold mb-1"> Remedy:</div>
+        <div>{chat.remedy}</div>
+      </div>
+    )}
+
+  </div>
+)}
+
         </div>
       ))}
       

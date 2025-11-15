@@ -258,7 +258,7 @@ export default function LandingPage() {
 
           {/* Service 2: AI-Assisted Q&A */}
           <div className="p-6 bg-[#F9F9EF] border-black border rounded-xl shadow-md hover:shadow-lg transition">
-            <img src="aihelp.png" alt="AI" className="mx-auto w-60 h-60 mb-4" />
+            <img src="aiassisted.png" alt="AI" className="mx-auto w-60 h-60 mb-4" />
             <h3 className="text-4xl mb-5 font-semibold text-gray-800 text-center">
               AI-Assisted Q&A
             </h3>
@@ -271,7 +271,7 @@ export default function LandingPage() {
 
           {/* Service 3: Remedies Suggestions */}
           <div className="p-6 bg-[#F9F9EF] border-black border rounded-xl shadow-md hover:shadow-lg transition">
-            <img src="remedy.png" alt="Remedies" className="mx-auto w-60 h-60 mb-4" />
+            <img src="aihelp.png" alt="Remedies" className="mx-auto w-60 h-60 mb-4" />
             <h3 className="text-4xl mb-5 font-semibold text-gray-800 text-center">
               Remedies Suggestions
             </h3>
